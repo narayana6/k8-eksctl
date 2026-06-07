@@ -7,7 +7,7 @@ metadata:
 
 managedNodeGroups:
 - name: expense
-  instanceType: t3.micro
+  instanceType: t3.small
   desiredCapacity: 3
-  spot: true
+  spot: false
   # eksctl create cluster -f eskctl.yaml   #cluster creation command
