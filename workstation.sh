@@ -69,7 +69,7 @@ VALIDATE $? "k9s installation"
 # Clone eksctl repo and create EKS cluster
 cd /home/ec2-user
 sudo -u ec2-user git clone https://github.com/narayana6/k8-eksctl.git
-cd eksctl
+cd k8-eksctl
 sudo -u ec2-user /usr/local/bin/eksctl create cluster -f eks.yaml
 
 # Authenticate kubectl with the cluster
