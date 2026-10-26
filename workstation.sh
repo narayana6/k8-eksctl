@@ -44,7 +44,9 @@ VALIDATE $? "eksctl installation"
 
 
 # kubectl
-curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/amd64/kubectl
+#curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/amd64/kubectl
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.35.3/2026-04-08/bin/linux/amd64/kubectl
+
 chmod +x ./kubectl
 mv kubectl /usr/local/bin/kubectl
 VALIDATE $? "kubectl installation"
@@ -55,11 +57,28 @@ ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 VALIDATE $? "kubens installation"
 
 #k9s
-curl -sS https://webinstall.dev/k9s | bash
+#curl -sS https://webinstall.dev/k9s | bash
+#VALIDATE $? "k9s installation"
+
+# k9s
+curl -sLO https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz
+tar -xzf k9s_Linux_amd64.tar.gz -C /tmp k9s && rm k9s_Linux_amd64.tar.gz
+install -m 0755 /tmp/k9s /usr/local/bin/k9s && rm /tmp/k9s
 VALIDATE $? "k9s installation"
+
+# Clone eksctl repo and create EKS cluster
+cd /home/ec2-user
+sudo -u ec2-user git clone https://github.com/narayana6/k8-eksctl.git
+cd eksctl
+sudo -u ec2-user /usr/local/bin/eksctl create cluster -f eks.yaml
+
+# Authenticate kubectl with the cluster
+sudo -u ec2-user aws eks update-kubeconfig --region us-east-1 --name expense
+sudo -u ec2-user /usr/local/bin/kubectl get nodes
 
 # Helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
 VALIDATE $? "helm installation"
+
